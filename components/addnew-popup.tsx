@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DialogContent,
   DialogDescription,
@@ -8,58 +10,114 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { addMeal } from "@/app/action/addMeal";
+
+type ResponseData = {
+  mealName: string;
+  category: string;
+  price: number;
+  rate: number;
+  date: string;
+  phase: string;
+};
 
 export const AddNewPopup = () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    // const mealName = e.get("mealName") as string;
+    // const category = e.get("category") as string;
+    // const price = Number(e.get("price"));
+    // const rate = Number(e.get("rate"));
+    // const date = e.get("date") as string;
+    // const phase = e.get("phase") as string;
+
+    // console.log("Form submitted:", {
+    //   mealName,
+    //   category,
+    //   price,
+    //   rate,
+    //   date,
+    //   phase,
+    // });
+
+    let errorMessage;
+
+    const data: ResponseData = {
+      mealName: (formData.get("mealName") as string) || "none",
+      category: (formData.get("category") as string) || "none",
+      price: Number(formData.get("price")) || 0,
+      rate: Number(formData.get("rate")) || 0,
+      date: (formData.get("date") as string) || "none",
+      phase: (formData.get("phase") as string) || "none",
+    };
+
+    errorMessage = await addMeal(data);
+
+    if (errorMessage) {
+      console.error("Error adding meal:", errorMessage);
+    } else {
+      console.log("Meal added successfully");
+    }
+    console.log(data);
+  };
   return (
     <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Add your meal details</DialogTitle>
-        <DialogDescription>Give information about the meal</DialogDescription>
-      </DialogHeader>
+      <form onSubmit={handleSubmit}>
+        <DialogHeader>
+          <DialogTitle>Add your meal details</DialogTitle>
+          <DialogDescription>Give information about the meal</DialogDescription>
+        </DialogHeader>
 
-      <div className="grid gap-4">
-        <div className="grid gap-3">
-          <Label htmlFor="name-1">Name of the Meal</Label>
-          <Input id="name" name="Meal name" />
-        </div>
-        <div className="grid gap-3">
-          <Label htmlFor="category">Category</Label>
-          <Input id="category" name="category" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+        <div className="mt-5 grid gap-4">
           <div className="grid gap-3">
-            <Label htmlFor="price">Price</Label>
-            <Input id="price" name="price" />
+            <Label htmlFor="name">Name of the Meal</Label>
+            <Input id="name" name="mealName" required />
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="rate">Rate</Label>
-            <Input id="rate" name="rate" />
+            <Label htmlFor="category">Category</Label>
+            <Input id="category" name="category" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="price">Price</Label>
+              <Input id="price" name="price" />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="rate">Rate</Label>
+              <Input id="rate" name="rate" />
+            </div>
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="date">Date</Label>
+            <Input id="date" name="date" />
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="phase">Phase</Label>
+            <Input id="phase" name="phase" />
           </div>
         </div>
 
-        <div className="grid gap-3">
-          <Label htmlFor="date">Rate</Label>
-          <Input id="rate" name="rate" />
-        </div>
-
-        <div className="grid gap-3">
-          <Label htmlFor="phase">Phase</Label>
-          <Input id="phase" name="phase" />
-        </div>
-      </div>
-
-      <DialogFooter className="gap-5">
-        <DialogClose asChild>
-          <button>Cancle</button>
-        </DialogClose>
-        <button
-          type="submit"
-          className="rounded-[10px] bg-[#8AA7BC] px-4 py-2 text-white"
-        >
-          Add Meal
-        </button>
-      </DialogFooter>
+        <DialogFooter className="mt-5 gap-5">
+          <DialogClose asChild>
+            <Button className="bg-transparent text-black hover:bg-transparent hover:text-red-600">
+              Cancle
+            </Button>
+          </DialogClose>
+          <Button
+            type="submit"
+            className="rounded-[10px] bg-[#0D273D] px-4 py-2 text-white hover:bg-green-700"
+          >
+            Add Meal
+          </Button>
+        </DialogFooter>
+      </form>
     </DialogContent>
   );
 };
