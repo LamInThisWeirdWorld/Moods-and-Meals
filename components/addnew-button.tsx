@@ -4,11 +4,12 @@ import React, { useState } from "react";
 import add from "../public/Subtract.svg";
 import Image from "next/image";
 import { Dialog, DialogTrigger } from "./ui/dialog";
-import { AddNewPopup } from "./addnew-popup";
+import AddNewPopup from "./addnew-popup";
 
 const AddNew = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
           type="submit"
@@ -18,7 +19,7 @@ const AddNew = () => {
           ADD NEW
         </button>
       </DialogTrigger>
-      <AddNewPopup />
+      <AddNewPopup onSuccess={() => setOpen(false)} />
     </Dialog>
   );
 };

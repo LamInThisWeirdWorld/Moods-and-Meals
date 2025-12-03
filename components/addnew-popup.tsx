@@ -23,26 +23,14 @@ type ResponseData = {
   phase: string;
 };
 
-export const AddNewPopup = () => {
+type AddNewPopupProps = {
+  onSuccess: () => void;
+};
+
+export default function AddNewPopup({ onSuccess }: AddNewPopupProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-
-    // const mealName = e.get("mealName") as string;
-    // const category = e.get("category") as string;
-    // const price = Number(e.get("price"));
-    // const rate = Number(e.get("rate"));
-    // const date = e.get("date") as string;
-    // const phase = e.get("phase") as string;
-
-    // console.log("Form submitted:", {
-    //   mealName,
-    //   category,
-    //   price,
-    //   rate,
-    //   date,
-    //   phase,
-    // });
 
     let errorMessage;
 
@@ -63,6 +51,9 @@ export const AddNewPopup = () => {
       console.log("Meal added successfully");
     }
     console.log(data);
+
+    // automately close the window after submission
+    onSuccess();
   };
   return (
     <DialogContent>
@@ -120,4 +111,4 @@ export const AddNewPopup = () => {
       </form>
     </DialogContent>
   );
-};
+}
