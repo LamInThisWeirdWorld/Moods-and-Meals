@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { addMeal } from "@/app/action/addMeal";
+import { useRouter } from "next/navigation";
 
 type ResponseData = {
   mealName: string;
@@ -31,6 +31,7 @@ export default function AddNewPopup({ onSuccess }: AddNewPopupProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const router = useRouter();
 
     let errorMessage;
 
@@ -51,7 +52,7 @@ export default function AddNewPopup({ onSuccess }: AddNewPopupProps) {
       console.log("Meal added successfully");
     }
     console.log(data);
-
+    // router.refresh();
     // automately close the window after submission
     onSuccess();
   };
