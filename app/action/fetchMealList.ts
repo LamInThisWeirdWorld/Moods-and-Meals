@@ -1,4 +1,5 @@
 import { supabase } from "../database-client";
+import DataTable from "@/components/data-table";
 
 type ResponseData = {
   name: string;
@@ -11,8 +12,7 @@ type ResponseData = {
 
 export const fetchMealList = async () => {
     try {
-        const { data, error } = await supabase.from("MealData").select("*")
-    // .order("created_at", { ascending: true});
+        const { data, error } = await supabase.from("MealData").select("*").order("created_at", { ascending: true});
 
         if (error) {
             // console.error("Error fetching meal list:", error.message);

@@ -12,7 +12,6 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "@/components/ui/button";
 import { addMeal } from "@/app/action/addMeal";
-import { useRouter } from "next/navigation";
 
 type ResponseData = {
   mealName: string;
@@ -23,15 +22,10 @@ type ResponseData = {
   phase: string;
 };
 
-type AddNewPopupProps = {
-  onSuccess: () => void;
-};
-
-export default function AddNewPopup({ onSuccess }: AddNewPopupProps) {
+export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const router = useRouter();
 
     let errorMessage;
 
@@ -44,16 +38,18 @@ export default function AddNewPopup({ onSuccess }: AddNewPopupProps) {
       phase: (formData.get("phase") as string) || "none",
     };
 
+    // call the addMeal funnction to add meal to the database
     errorMessage = await addMeal(data);
 
     if (errorMessage) {
       console.error("Error adding meal:", errorMessage);
+      return;
     } else {
       console.log("Meal added successfully");
     }
     console.log(data);
-    // router.refresh();
-    // automately close the window after submission
+
+    // automately close the window and re-render the table after submission
     onSuccess();
   };
   return (

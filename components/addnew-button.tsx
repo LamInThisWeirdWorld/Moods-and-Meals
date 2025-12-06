@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import add from "../public/Subtract.svg";
 import Image from "next/image";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import AddNewPopup from "./addnew-popup";
 
-const AddNew = () => {
+export default function AddNewButton({ onAdded }: { onAdded: () => void }) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -19,9 +19,15 @@ const AddNew = () => {
           ADD NEW
         </button>
       </DialogTrigger>
-      <AddNewPopup onSuccess={() => setOpen(false)} />
+      {/* onSuccess will call setOpen state and the onAdded function (which is fetching the data) */}
+      <AddNewPopup
+        onSuccess={() => {
+          setOpen(false);
+          onAdded();
+        }}
+      />
     </Dialog>
   );
-};
+}
 
-export default AddNew;
+// export default AddNewButton;

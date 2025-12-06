@@ -9,6 +9,7 @@ type ResponseData = {
   phase: string;
 };
 
+// Function to add a meal to the database
 export const addMeal = async (data: ResponseData) => {
     const { error } = await supabase.from("MealData").insert([
         {
@@ -25,6 +26,7 @@ export const addMeal = async (data: ResponseData) => {
         console.error("Error adding meal:", error.message);
         return error.message;
     }
+
 
     return null;
 }

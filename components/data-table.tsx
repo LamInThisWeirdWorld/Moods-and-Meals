@@ -9,9 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fetchMealList } from "@/app/action/fetchMealList";
-import { useEffect, useState } from "react";
-import { supabase } from "@/app/database-client";
 
 type ResponseData = {
   name: string;
@@ -22,38 +19,7 @@ type ResponseData = {
   phase: string;
 };
 
-// function FetchTableData() {
-//   const [meals, setMeals] = useState<ResponseData[]>([]);
-//   const fetchData = async () => {
-//     const { data, error } = await supabase.from("MealData").select("*");
-//     setMeals(data || []);
-//   }
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-// }
-
-export default function DataTable() {
-  // const [meals, setMeals] = useState(initialMeals || []);
-
-  // useEffect(() => {
-  //   const load = async () => {
-  //     const data = await fetchMealList();
-  //     setMeals(data || []);
-  //   };
-  //   load();
-  // }, []);
-  const [meals, setMeals] = useState<ResponseData[]>([]);
-  const fetchData = async () => {
-    const { data, error } = await supabase.from("MealData").select("*");
-    setMeals(data || []);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+export default function DataTable({ meals }: { meals: ResponseData[] }) {
   return (
     <Table className="rounded-2xl bg-[#F5F0E9]">
       <TableHeader>

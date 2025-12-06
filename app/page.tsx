@@ -7,15 +7,47 @@ import WeatherCard from "@/components/weather-card";
 import { Calendar } from "@/components/ui/calendar";
 import DataTable from "@/components/data-table";
 import SearchButton from "@/components/search-button";
-import AddNew from "@/components/addnew-button";
 import SortButton from "@/components/sort-button";
 import FilterButton from "@/components/filter-button";
-import React from "react";
+import React, { useState, useEffect, use } from "react";
+import { supabase } from "./database-client";
+import AddNewButton from "@/components/addnew-button";
+import { fetchMealList } from "./action/fetchMealList";
+
+type ResponseData = {
+  name: string;
+  category: string;
+  price: number;
+  rate: number;
+  date: string;
+  phase: string;
+};
 
 export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  // Pass meal data to the table component
+  const [meals, setMeals] = useState<ResponseData[]>([]);
+
+  // Function to fetch meal data from supabase
+  // const fetchData = async () => {
+  //   const { data, error } = await supabase.from("MealData").select("*");
+  //   setMeals(data || []);
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+  const fetchData = async () => {
+    const mealsList = await fetchMealList();
+    setMeals(mealsList || []);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex h-screen flex-row bg-[#0E141C]">
+    <div className="flex flex-row bg-[#0E141C]">
       <SidebarProvider>
         {/* <SidebarTrigger /> */}
         <AppSidebar />
@@ -47,7 +79,8 @@ export default function Home() {
             <div className="flex items-center justify-center gap-5">
               <SortButton />
               <div className="h-10 w-px bg-white"></div>
-              <AddNew />
+              {/* pass the fetchData function to be called in the addnew-popup */}
+              <AddNewButton onAdded={fetchData} />
             </div>
           </div>
 
@@ -55,8 +88,13 @@ export default function Home() {
         </div>
 
         <div className="mt-10">
-          <DataTable />
+          <DataTable meals={meals} />
         </div>
+      </div>
+
+      <hr />
+      <div className="mt-10 h-50">
+        <hr />
       </div>
     </div>
   );
