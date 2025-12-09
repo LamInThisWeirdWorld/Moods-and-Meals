@@ -29,14 +29,6 @@ export default function Home() {
   const [meals, setMeals] = useState<ResponseData[]>([]);
 
   // Function to fetch meal data from supabase
-  // const fetchData = async () => {
-  //   const { data, error } = await supabase.from("MealData").select("*");
-  //   setMeals(data || []);
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
   const fetchData = async () => {
     const mealsList = await fetchMealList();
     setMeals(mealsList || []);
@@ -87,15 +79,15 @@ export default function Home() {
           <FilterButton />
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 mb-50">
           <DataTable meals={meals} />
         </div>
       </div>
 
-      <hr />
+      {/* <hr />
       <div className="mt-10 h-50">
         <hr />
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -15,8 +15,6 @@ export const fetchMealList = async () => {
         const { data, error } = await supabase.from("MealData").select("*").order("created_at", { ascending: true});
 
         if (error) {
-            // console.error("Error fetching meal list:", error.message);
-            // return;
             throw error;
         }
 

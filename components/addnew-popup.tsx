@@ -83,7 +83,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
           <div className="grid gap-3">
             <Label htmlFor="date">Date</Label>
-            <Input id="date" name="date" />
+            <Input type="date" id="date" name="date" />
           </div>
 
           <div className="grid gap-3">
