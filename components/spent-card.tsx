@@ -1,14 +1,14 @@
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 
-const SpentCard = () => {
+const SpentCard = ({ spent }: { spent: number }) => {
   return (
     <div className="flex h-40 w-100 flex-col justify-center rounded-2xl bg-[#A6BED1]">
       <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
         Spent this month
       </div>
       <div className="font-jersey15 mt-0 ml-5 pt-0 text-5xl tracking-wide text-[#0D273D]">
-        $240
+        ${spent.toFixed(2)}
       </div>
       <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
         <span className="font-bold">$300</span> left in your budget

@@ -13,6 +13,7 @@ import React, { useState, useEffect, use } from "react";
 import { supabase } from "./database-client";
 import AddNewButton from "@/components/addnew-button";
 import { fetchMealList } from "./action/fetchMealList";
+import { sumSpent } from "./action/spentCalculation";
 
 type ResponseData = {
   name: string;
@@ -33,6 +34,8 @@ export default function Home() {
     const mealsList = await fetchMealList();
     setMeals(mealsList || []);
   };
+
+  const totalSpent = sumSpent(meals);
 
   useEffect(() => {
     fetchData();
@@ -56,7 +59,7 @@ export default function Home() {
         </div>
 
         <div className="mt-10 flex flex-row items-end gap-15">
-          <SpentCard />
+          <SpentCard spent={totalSpent} />
           <WeatherCard />
           <Calendar
             mode="single"
@@ -83,11 +86,6 @@ export default function Home() {
           <DataTable meals={meals} />
         </div>
       </div>
-
-      {/* <hr />
-      <div className="mt-10 h-50">
-        <hr />
-      </div> */}
     </div>
   );
 }
