@@ -35,6 +35,7 @@ export default function Home() {
     setMeals(mealsList || []);
   };
 
+  // Calculate total spent this month
   const totalSpent = sumSpent(meals);
 
   useEffect(() => {

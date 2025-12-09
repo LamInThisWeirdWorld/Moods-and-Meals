@@ -34,7 +34,7 @@ export default function DataTable({ meals }: { meals: ResponseData[] }) {
       </TableHeader>
       <TableBody>
         {meals?.map((meal: ResponseData) => (
-          <TableRow>
+          <TableRow className="hover:bg-[#3E6985]">
             <TableCell className="font-medium" key={meal.name}>
               {meal.name}
             </TableCell>

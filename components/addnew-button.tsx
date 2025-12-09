@@ -13,7 +13,7 @@ export default function AddNewButton({ onAdded }: { onAdded: () => void }) {
       <DialogTrigger asChild>
         <button
           type="submit"
-          className="font-instrument-sans flex h-12 w-40 items-center gap-2 rounded-[10px] bg-[#8AA7BC] pl-4 text-[20px] font-bold text-[#0D273]"
+          className="font-instrument-sans flex h-12 w-40 items-center gap-2 rounded-[10px] bg-[#8AA7BC] pl-4 text-[20px] font-bold text-[#0D273] hover:scale-112"
         >
           <Image className="w-5" src={add} alt="" />
           ADD NEW
