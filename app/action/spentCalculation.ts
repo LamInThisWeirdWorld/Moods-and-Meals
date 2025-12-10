@@ -9,7 +9,7 @@ type ResponseData = {
   phase: string;
 };
 
-export function sumSpent(meals: ResponseData[]): number {
+export function sumSpentMonthly(meals: ResponseData[]): number {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
@@ -21,5 +21,29 @@ export function sumSpent(meals: ResponseData[]): number {
         })
         .reduce((sum, m) => sum + Number(m.price), 0);
 
+
+}
+
+export function sumSpentWeekly(meals: ResponseData[]): number {
+    const now = new Date();
+
+    const dayOfWeek = now.getDate();
+    // Calculate day to Monday
+    const diffToMonday = (dayOfWeek + 6) % 7;
+
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - diffToMonday);
+    monday.setHours(0, 0, 0, 0);
+
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+
+    return meals
+        .filter((m) => {
+            const d = new Date(m.date);
+            return d >= monday && d <= sunday        
+        })
+        .reduce((sum, m) => sum + Number(m.price), 0)
 
 }

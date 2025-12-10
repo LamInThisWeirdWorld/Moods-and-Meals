@@ -13,7 +13,8 @@ import React, { useState, useEffect, use } from "react";
 import { supabase } from "./database-client";
 import AddNewButton from "@/components/addnew-button";
 import { fetchMealList } from "./action/fetchMealList";
-import { sumSpent } from "./action/spentCalculation";
+import { sumSpentMonthly, sumSpentWeekly } from "./action/spentCalculation";
+import SwitchMonthWeek from "@/components/switch-month-week";
 
 type ResponseData = {
   name: string;
@@ -28,6 +29,7 @@ export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   // Pass meal data to the table component
   const [meals, setMeals] = useState<ResponseData[]>([]);
+  const [isMonthly, setIsMonthly] = useState<boolean>(true);
 
   // Function to fetch meal data from supabase
   const fetchData = async () => {
@@ -36,7 +38,10 @@ export default function Home() {
   };
 
   // Calculate total spent this month
-  const totalSpent = sumSpent(meals);
+  const totalSpentMonthly = sumSpentMonthly(meals);
+
+  const totalSpentWeekly = sumSpentWeekly(meals);
+  console.log("Total Spent This Week: ", totalSpentWeekly);
 
   useEffect(() => {
     fetchData();
@@ -60,7 +65,15 @@ export default function Home() {
         </div>
 
         <div className="mt-10 flex flex-row items-end gap-15">
-          <SpentCard spent={totalSpent} />
+          <div className="flex flex-col">
+            <SwitchMonthWeek isMonth={isMonthly} onSelectMonth={setIsMonthly} />
+            <SpentCard
+              spentMonthly={totalSpentMonthly}
+              spentWeekly={totalSpentWeekly}
+              isMonth={isMonthly}
+            />
+          </div>
+
           <WeatherCard />
           <Calendar
             mode="single"
