@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from "react";
-"use client";
+'use client';
 import {
   Table,
   TableBody,
@@ -8,18 +8,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
-type ResponseData = {
-  name: string;
-  category: string;
-  price: number;
-  rate: number;
-  date: string;
-  phase: string;
-};
+import type { ResponseData } from '@/lib/meal';
+import { useRouter } from 'next/navigation';
+
+// type ResponseData = {
+//   name: string;
+//   category: string;
+//   price: number;
+//   rate: number;
+//   date: string;
+//   phase: string;
+// };
 
 export default function DataTable({ meals }: { meals: ResponseData[] }) {
+  const router = useRouter();
   return (
     <Table className="rounded-2xl bg-[#F5F0E9]">
       <TableHeader>
@@ -34,7 +38,12 @@ export default function DataTable({ meals }: { meals: ResponseData[] }) {
       </TableHeader>
       <TableBody>
         {meals?.map((meal: ResponseData) => (
-          <TableRow className="hover:bg-[#3E6985]">
+          <TableRow
+            className="cursor-pointer transition hover:bg-[#F0E7D5]"
+            onClick={() => router.push(`/meal/${meal.id}`)}
+            // maybe dont really need this prefetch since the page is not that heavy
+            // onMouseEnter={() => router.prefetch(`/meal/${meal.id}`)}
+          >
             <TableCell className="font-medium" key={meal.name}>
               {meal.name}
             </TableCell>

@@ -1,29 +1,30 @@
-"use client";
+'use client';
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import SpentCard from "@/components/spent-card";
-import WeatherCard from "@/components/weather-card";
-import { Calendar } from "@/components/ui/calendar";
-import DataTable from "@/components/data-table";
-import SearchButton from "@/components/search-button";
-import SortButton from "@/components/sort-button";
-import FilterButton from "@/components/filter-button";
-import React, { useState, useEffect, use } from "react";
-import { supabase } from "./database-client";
-import AddNewButton from "@/components/addnew-button";
-import { fetchMealList } from "./action/fetchMealList";
-import { sumSpentMonthly, sumSpentWeekly } from "./action/spentCalculation";
-import SwitchMonthWeek from "@/components/switch-month-week";
+import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import SpentCard from '@/components/spent-card';
+import WeatherCard from '@/components/weather-card';
+import { Calendar } from '@/components/ui/calendar';
+import DataTable from '@/components/data-table';
+import SearchButton from '@/components/search-button';
+import SortButton from '@/components/sort-button';
+import FilterButton from '@/components/filter-button';
+import React, { useState, useEffect, use } from 'react';
+import { supabase } from './database-client';
+import AddNewButton from '@/components/addnew-button';
+import { fetchMealList } from './action/fetchMealList';
+import { sumSpentMonthly, sumSpentWeekly } from './action/spentCalculation';
+import SwitchMonthWeek from '@/components/switch-month-week';
+import type { ResponseData } from '@/lib/meal';
 
-type ResponseData = {
-  name: string;
-  category: string;
-  price: number;
-  rate: number;
-  date: string;
-  phase: string;
-};
+// type ResponseData = {
+//   name: string;
+//   category: string;
+//   price: number;
+//   rate: number;
+//   date: string;
+//   phase: string;
+// };
 
 export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -41,7 +42,7 @@ export default function Home() {
   const totalSpentMonthly = sumSpentMonthly(meals);
 
   const totalSpentWeekly = sumSpentWeekly(meals);
-  console.log("Total Spent This Week: ", totalSpentWeekly);
+  console.log('Total Spent This Week: ', totalSpentWeekly);
 
   useEffect(() => {
     fetchData();
