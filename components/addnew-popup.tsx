@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   DialogContent,
@@ -7,20 +7,21 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from "@/components/ui/dialog";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Button } from "@/components/ui/button";
-import { addMeal } from "@/app/action/addMeal";
+} from '@/components/ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Button } from '@/components/ui/button';
+import { addMeal } from '@/app/action/addMeal';
+import { InputData } from '@/lib/meal';
 
-type ResponseData = {
-  mealName: string;
-  category: string;
-  price: number;
-  rate: number;
-  date: string;
-  phase: string;
-};
+// type ResponseData = {
+//   mealName: string;
+//   category: string;
+//   price: number;
+//   rate: number;
+//   date: string;
+//   phase: string;
+// };
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,23 +30,23 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
     let errorMessage;
 
-    const data: ResponseData = {
-      mealName: (formData.get("mealName") as string) || "none",
-      category: (formData.get("category") as string) || "none",
-      price: Number(formData.get("price")) || 0,
-      rate: Number(formData.get("rate")) || 0,
-      date: (formData.get("date") as string) || "none",
-      phase: (formData.get("phase") as string) || "none",
+    const data: InputData = {
+      name: (formData.get('mealName') as string) || 'none',
+      category: (formData.get('category') as string) || 'none',
+      price: Number(formData.get('price')) || 0,
+      rate: Number(formData.get('rate')) || 0,
+      date: (formData.get('date') as string) || 'none',
+      phase: (formData.get('phase') as string) || 'none',
     };
 
     // call the addMeal funnction to add meal to the database
     errorMessage = await addMeal(data);
 
     if (errorMessage) {
-      console.error("Error adding meal:", errorMessage);
+      console.error('Error adding meal:', errorMessage);
       return;
     } else {
-      console.log("Meal added successfully");
+      console.log('Meal added successfully');
     }
     console.log(data);
 

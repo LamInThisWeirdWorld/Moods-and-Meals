@@ -1,19 +1,21 @@
 import { supabase } from "../database-client";
+import type { InputData } from "@/lib/meal"
 
-type ResponseData = {
-  mealName: string;
-  category: string;
-  price: number;
-  rate: number;
-  date: string;
-  phase: string;
-};
+
+// type ResponseData = {
+//   mealName: string;
+//   category: string;
+//   price: number;
+//   rate: number;
+//   date: string;
+//   phase: string;
+// };
 
 // Function to add a meal to the database
-export const addMeal = async (data: ResponseData) => {
+export const addMeal = async (data: InputData) => {
     const { error } = await supabase.from("MealData").insert([
         {
-            name: data.mealName,
+            name: data.name,
             category: data.category,
             price: data.price,
             rate: data.rate,
