@@ -8,6 +8,8 @@ import blood from '../../../public/blood.svg';
 import mood from '../../../public/happy.svg';
 import price from '../../../public/price_tag.svg';
 import getMealPage from '../../action/getMealPage';
+import DeleteButton from '@/components/deleteButton';
+import { use } from 'react';
 import { format } from 'date-fns';
 
 export default async function mealPage({
@@ -119,11 +121,19 @@ export default async function mealPage({
         </div>
 
         {/* notes */}
-        <div className="relative mt-5 mb-30 h-200 w-200 rounded-2xl bg-[#F0E7D5]">
+        <div className="relative mt-5 mb-10 h-200 w-200 rounded-2xl bg-[#F0E7D5]">
           <span className="font-instrument-sans absolute mt-3 ml-5 text-3xl font-semibold italic">
             Note
           </span>
         </div>
+
+        {/* Delete button */}
+        <DeleteButton mealId={id} />
+        {/* <div
+          className="right-180 flex h-10 w-30 cursor-pointer items-center justify-center self-end rounded-2xl border-2 border-[#F04D23] text-[20px] text-[#F04D23] transition hover:bg-[#F04D23] hover:text-white"
+        >
+          Delete
+        </div> */}
       </div>
     </div>
   );
