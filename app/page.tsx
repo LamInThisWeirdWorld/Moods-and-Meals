@@ -49,15 +49,18 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-row bg-[#0E141C]">
-      <SidebarProvider>
-        {/* <SidebarTrigger /> */}
-        <AppSidebar />
-      </SidebarProvider>
+    <div className="flex flex-row gap-5 bg-[#0E141C]">
+      <div>
+        <SidebarProvider>
+          {/* <SidebarTrigger /> */}
+          <AppSidebar />
+        </SidebarProvider>
+      </div>
 
-      <div className="ml-30 flex flex-col">
+      {/* RIGHT-HAND SIDE */}
+      <div className="mx-30 my-10 flex w-full flex-col">
         <div className="absolute">
-          <p className="font-instrument-sans mt-10 text-2xl text-white">
+          <p className="font-instrument-sans text-2xl text-white">
             Good morning
           </p>
           <p className="font-instrument-sans text-4xl font-bold text-white">
@@ -65,7 +68,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-10 flex flex-row items-end gap-15">
+        {/* SPENT CARD, WEATHER CARD, CALENDAR */}
+        <div className="flex flex-row items-end gap-15">
           <div className="flex flex-col">
             <SwitchMonthWeek isMonth={isMonthly} onSelectMonth={setIsMonthly} />
             <SpentCard
@@ -83,9 +87,12 @@ export default function Home() {
             className="rounded-lg border"
           />
         </div>
+
+        {/* SEARCH, FILTER, SORT, ADD NEW */}
         <div className="flex flex-col gap-2">
           <div className="mt-10 flex flex-row items-center justify-between">
             <SearchButton />
+            {/* SORT && ADD NEW */}
             <div className="flex items-center justify-center gap-5">
               <SortButton />
               <div className="h-10 w-px bg-white"></div>
@@ -93,11 +100,11 @@ export default function Home() {
               <AddNewButton onAdded={fetchData} />
             </div>
           </div>
-
           <FilterButton />
         </div>
 
-        <div className="mt-10 mb-50">
+        {/* DATA TABLE */}
+        <div className="mt-10">
           <DataTable meals={meals} />
         </div>
       </div>

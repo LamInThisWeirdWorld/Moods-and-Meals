@@ -28,14 +28,14 @@ export default function DataTable({ meals }: { meals: ResponseData[] }) {
 
   return (
     <Table className="rounded-2xl bg-[#F5F0E9]">
-      <TableHeader>
+      <TableHeader className="px-10">
         <TableRow className="rounded-2xl bg-[#CDD7DF] hover:bg-[#CDD7DF]">
-          <TableHead>Name</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Rate</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Phase</TableHead>
+          <TableHead className="text-[20px] font-bold">Name</TableHead>
+          <TableHead className="text-[20px] font-bold">Category</TableHead>
+          <TableHead className="text-[20px] font-bold">Price</TableHead>
+          <TableHead className="text-[20px] font-bold">Rate</TableHead>
+          <TableHead className="text-[20px] font-bold">Date</TableHead>
+          <TableHead className="text-[20px] font-bold">Phase</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -52,6 +52,7 @@ export default function DataTable({ meals }: { meals: ResponseData[] }) {
             <TableCell key={meal.category}>{meal.category}</TableCell>
             <TableCell key={meal.price}>{meal.price}</TableCell>
             <TableCell key={meal.rate}>{meal.rate}</TableCell>
+            {/* format the date using npm i date-fns */}
             <TableCell key={meal.date}>
               {format(new Date(meal.date), 'dd/MM/yyyy')}
             </TableCell>
