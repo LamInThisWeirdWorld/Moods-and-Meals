@@ -30,20 +30,25 @@ export function sumSpentWeekly(meals: ResponseData[]): number {
     const dayOfWeek = now.getDate();
     // Calculate day to Monday
     const diffToMonday = (dayOfWeek + 6) % 7;
+    console.log({diffToMonday});
 
+    // Set monday date
     const monday = new Date(now);
     monday.setDate(now.getDate() - diffToMonday);
     monday.setHours(0, 0, 0, 0);
 
+    // Set sunday date
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
     sunday.setHours(23, 59, 59, 999);
 
-    return meals
+    return( meals
         .filter((m) => {
             const d = new Date(m.date);
-            return d >= monday && d <= sunday        
+            if (d >= monday && d <= sunday) 
+            return d >= monday && d <= sunday    
         })
         .reduce((sum, m) => sum + Number(m.price), 0)
+    )
 
 }

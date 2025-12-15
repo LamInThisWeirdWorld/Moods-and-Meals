@@ -71,7 +71,7 @@ export default async function mealPage({
           </div>
 
           {/* other images */}
-          <div className="ml-1 flex flex-row gap-4">
+          <div className="flex flex-row gap-4">
             <div className="h-20 w-20 bg-[#F0E7D5]"></div>
             <div className="h-20 w-20 bg-[#F0E7D5]"></div>
             <div className="h-20 w-20 bg-[#F0E7D5]"></div>

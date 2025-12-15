@@ -12,6 +12,7 @@ import {
 
 import type { ResponseData } from '@/lib/meal';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 // type ResponseData = {
 //   name: string;
@@ -24,6 +25,7 @@ import { useRouter } from 'next/navigation';
 
 export default function DataTable({ meals }: { meals: ResponseData[] }) {
   const router = useRouter();
+
   return (
     <Table className="rounded-2xl bg-[#F5F0E9]">
       <TableHeader>
@@ -50,7 +52,9 @@ export default function DataTable({ meals }: { meals: ResponseData[] }) {
             <TableCell key={meal.category}>{meal.category}</TableCell>
             <TableCell key={meal.price}>{meal.price}</TableCell>
             <TableCell key={meal.rate}>{meal.rate}</TableCell>
-            <TableCell key={meal.date}>{meal.date}</TableCell>
+            <TableCell key={meal.date}>
+              {format(new Date(meal.date), 'dd/MM/yyyy')}
+            </TableCell>
             <TableCell key={meal.phase}>{meal.phase}</TableCell>
           </TableRow>
         ))}
