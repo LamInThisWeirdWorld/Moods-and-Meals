@@ -21,6 +21,8 @@ export const addMeal = async (data: InputData) => {
             rate: data.rate,
             date: data.date,
             phase: data.phase,
+            mood: data.mood,
+            note: data.note,
         },
     ]).single();
 

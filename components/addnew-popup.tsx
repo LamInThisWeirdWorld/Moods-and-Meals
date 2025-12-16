@@ -13,17 +13,13 @@ import { Input } from './ui/input';
 import { Button } from '@/components/ui/button';
 import { addMeal } from '@/app/action/addMeal';
 import { InputData } from '@/lib/meal';
-
-// type ResponseData = {
-//   mealName: string;
-//   category: string;
-//   price: number;
-//   rate: number;
-//   date: string;
-//   phase: string;
-// };
+import { MoodDropDown } from './mood-dropdown';
+import { useState } from 'react';
+import { PhaseDropDown } from './phase-dropdown';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
+  const [mood, setMood] = useState<string>('Happy');
+  const [phase, setPhase] = useState<string>('Luteal');
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -36,7 +32,9 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
       price: Number(formData.get('price')) || 0,
       rate: Number(formData.get('rate')) || 0,
       date: (formData.get('date') as string) || 'none',
-      phase: (formData.get('phase') as string) || 'none',
+      phase: phase || 'Luteal',
+      mood: mood || 'Happy',
+      note: (formData.get('note') as string) || '',
     };
 
     // call the addMeal funnction to add meal to the database
@@ -82,14 +80,25 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="mood">Mood</Label>
+              <MoodDropDown mood={mood} setMood={setMood} />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="phase">Phase</Label>
+              <PhaseDropDown phase={phase} setPhase={setPhase} />
+            </div>
+          </div>
+
           <div className="grid gap-3">
             <Label htmlFor="date">Date</Label>
             <Input type="date" id="date" name="date" />
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="phase">Phase</Label>
-            <Input id="phase" name="phase" />
+            <Label htmlFor="date">Note</Label>
+            <Input id="note" name="note" />
           </div>
         </div>
 

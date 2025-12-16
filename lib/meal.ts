@@ -15,4 +15,6 @@ export type InputData = {
     rate: number;
     date: string;
     phase: string;
+    mood: string;
+    note: string;
 };

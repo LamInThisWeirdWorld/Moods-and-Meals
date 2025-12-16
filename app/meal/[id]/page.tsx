@@ -115,7 +115,7 @@ export default async function mealPage({
           <div className="flex flex-row items-center justify-center gap-1">
             <Image src={mood} alt="mood" />
             <span className="font-instrument-sans text-[20px] font-semibold">
-              Normal
+              {meal.mood}
             </span>
           </div>
         </div>
@@ -125,15 +125,13 @@ export default async function mealPage({
           <span className="font-instrument-sans absolute mt-3 ml-5 text-3xl font-semibold italic">
             Note
           </span>
+          <span className="font-instrument-sans absolute mx-5 mt-15 mb-5">
+            {meal.note}
+          </span>
         </div>
 
         {/* Delete button */}
         <DeleteButton mealId={id} />
-        {/* <div
-          className="right-180 flex h-10 w-30 cursor-pointer items-center justify-center self-end rounded-2xl border-2 border-[#F04D23] text-[20px] text-[#F04D23] transition hover:bg-[#F04D23] hover:text-white"
-        >
-          Delete
-        </div> */}
       </div>
     </div>
   );
