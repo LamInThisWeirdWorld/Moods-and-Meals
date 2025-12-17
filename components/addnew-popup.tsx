@@ -17,11 +17,13 @@ import { MoodDropDown } from './mood-dropdown';
 import { useState } from 'react';
 import { PhaseDropDown } from './phase-dropdown';
 import { CategoryDropDown } from './category-dropdown';
+import { WeatherDropDown } from './wather-dropdown';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const [mood, setMood] = useState<string>('Happy');
   const [phase, setPhase] = useState<string>('Luteal');
   const [category, setCategory] = useState<string>('Other');
+  const [weather, setWeather] = useState<string>('Sunny');
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -38,6 +40,8 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
       phase: phase || 'Luteal',
       mood: mood || 'Happy',
       note: (formData.get('note') as string) || '',
+      weather: weather || 'none',
+      temperature: Number(formData.get('temperature')) || 0,
     };
 
     // call the addMeal funnction to add meal to the database
@@ -98,6 +102,17 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
             <div className="grid gap-3">
               <Label htmlFor="phase">Phase</Label>
               <PhaseDropDown phase={phase} setPhase={setPhase} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="weather">Weather</Label>
+              <WeatherDropDown weather={weather} setWeather={setWeather} />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="phase">Temperature</Label>
+              <Input id="temperature" name="temperature" />
             </div>
           </div>
 

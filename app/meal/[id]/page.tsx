@@ -20,6 +20,7 @@ export default async function mealPage({
   const { id } = await params;
 
   const meal = await getMealPage(id);
+  const weather = meal.WeatherTemp;
 
   if (!meal) {
     return <div>Meal not found id {id}</div>;
@@ -101,7 +102,7 @@ export default async function mealPage({
           <div className="flex flex-row items-center justify-center gap-1">
             <Image src={temperature} alt="temp" />
             <span className="font-instrument-sans text-[20px] font-semibold">
-              Sunny, 24°
+              {weather.weather}, {weather.temperature}°
             </span>
           </div>
           {/* period */}

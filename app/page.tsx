@@ -17,15 +17,6 @@ import { sumSpentMonthly, sumSpentWeekly } from './action/spentCalculation';
 import SwitchMonthWeek from '@/components/switch-month-week';
 import type { ResponseData } from '@/lib/meal';
 
-// type ResponseData = {
-//   name: string;
-//   category: string;
-//   price: number;
-//   rate: number;
-//   date: string;
-//   phase: string;
-// };
-
 export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   // Pass meal data to the table component
@@ -49,7 +40,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-row gap-5 bg-[#0E141C]">
+    <div className="flex h-screen w-screen flex-row gap-5 bg-[#0E141C]">
       <div>
         <SidebarProvider>
           {/* <SidebarTrigger /> */}

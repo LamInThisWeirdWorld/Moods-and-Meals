@@ -13,7 +13,7 @@ import type { InputData } from "@/lib/meal"
 
 // Function to add a meal to the database
 export const addMeal = async (data: InputData) => {
-    const { error } = await supabase.from("MealData").insert([
+    const { data: meal, error: mealError } = await supabase.from("MealData").insert([
         {
             name: data.name,
             category: data.category,
@@ -25,12 +25,27 @@ export const addMeal = async (data: InputData) => {
             note: data.note,
             place: data.place,
         },
-    ]).single();
+    ])
+    .select("id")
+    .single();
 
-    if (error) {
-        console.error("Error adding meal:", error.message);
-        return error.message;
+    if (mealError) {
+        console.error("Error adding meal:", mealError.message);
+        return mealError.message;
     }
+
+    const { error: weatherError } = await supabase.from("WeatherTemp").insert({
+        id: meal.id,
+        temperature: data.temperature,
+        weather: data.weather,
+    })
+    .single();
+
+    if (weatherError) {
+        console.error("Error adding meal:", weatherError.message);
+        return weatherError.message;
+    }
+    
 
 
     return null;
