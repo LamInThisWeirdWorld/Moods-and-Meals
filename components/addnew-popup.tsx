@@ -16,10 +16,12 @@ import { InputData } from '@/lib/meal';
 import { MoodDropDown } from './mood-dropdown';
 import { useState } from 'react';
 import { PhaseDropDown } from './phase-dropdown';
+import { CategoryDropDown } from './category-dropdown';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const [mood, setMood] = useState<string>('Happy');
   const [phase, setPhase] = useState<string>('Luteal');
+  const [category, setCategory] = useState<string>('Other');
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -28,7 +30,8 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
     const data: InputData = {
       name: (formData.get('mealName') as string) || 'none',
-      category: (formData.get('category') as string) || 'none',
+      category: category || 'none',
+      place: (formData.get('place') as string) || 'none',
       price: Number(formData.get('price')) || 0,
       rate: Number(formData.get('rate')) || 0,
       date: (formData.get('date') as string) || 'none',
@@ -60,23 +63,30 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
         </DialogHeader>
 
         <div className="mt-5 grid gap-4">
-          <div className="grid gap-3">
-            <Label htmlFor="name">Name of the Meal</Label>
-            <Input id="name" name="mealName" required />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="name">Name of the Meal</Label>
+              <Input id="name" name="mealName" required />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="category">Category</Label>
+              <CategoryDropDown category={category} setCategory={setCategory} />
+            </div>
           </div>
+
           <div className="grid gap-3">
-            <Label htmlFor="category">Category</Label>
-            <Input id="category" name="category" />
+            <Label htmlFor="name">Got it from</Label>
+            <Input id="place" name="place" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-3">
               <Label htmlFor="price">Price</Label>
-              <Input id="price" name="price" />
+              <Input id="price" name="price" required />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="rate">Rate</Label>
-              <Input id="rate" name="rate" />
+              <Input id="rate" name="rate" required />
             </div>
           </div>
 

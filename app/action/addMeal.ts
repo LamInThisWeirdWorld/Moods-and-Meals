@@ -23,6 +23,7 @@ export const addMeal = async (data: InputData) => {
             phase: data.phase,
             mood: data.mood,
             note: data.note,
+            place: data.place,
         },
     ]).single();
 

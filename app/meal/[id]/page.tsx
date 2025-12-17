@@ -91,7 +91,7 @@ export default async function mealPage({
           <div className="flex flex-row items-center gap-3">
             <Image src={location} alt="location" />
             <span className="font-instrument-sans text-[20px] font-semibold text-[#F0E7D5]">
-              Matcha Kona
+              {meal.place}
             </span>
           </div>
         </div>

@@ -17,4 +17,5 @@ export type InputData = {
     phase: string;
     mood: string;
     note: string;
+    place: string;
 };
