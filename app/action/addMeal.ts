@@ -1,5 +1,6 @@
 import { supabase } from "../database-client";
 import type { InputData } from "@/lib/meal"
+import { uploadImages } from "./uploadImages";
 
 
 // type ResponseData = {
@@ -12,7 +13,7 @@ import type { InputData } from "@/lib/meal"
 // };
 
 // Function to add a meal to the database
-export const addMeal = async (data: InputData) => {
+export const addMeal = async (data: InputData, images: File[]) => {
     const { data: meal, error: mealError } = await supabase.from("MealData").insert([
         {
             name: data.name,
@@ -34,8 +35,10 @@ export const addMeal = async (data: InputData) => {
         return mealError.message;
     }
 
+    const mealId = meal.id
+
     const { error: weatherError } = await supabase.from("WeatherTemp").insert({
-        id: meal.id,
+        id: mealId,
         temperature: data.temperature,
         weather: data.weather,
     })
@@ -45,8 +48,21 @@ export const addMeal = async (data: InputData) => {
         console.error("Error adding meal:", weatherError.message);
         return weatherError.message;
     }
-    
 
+    // upload images to storage using images and mealId to create path
+    const imagePaths = await uploadImages(images, mealId);
+
+    // for each image, get its mealId and image path
+    const rows = imagePaths.map((path) => ({
+        meal_id: mealId,
+        image_url: supabase.storage
+            .from("meal-images")
+            .getPublicUrl(path).data.publicUrl,
+    }));
+
+    // insert those data to the MealImages table
+    await supabase.from("MealImages").insert(rows);
+    
 
     return null;
 }

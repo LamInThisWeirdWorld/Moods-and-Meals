@@ -18,12 +18,16 @@ import { useState } from 'react';
 import { PhaseDropDown } from './phase-dropdown';
 import { CategoryDropDown } from './category-dropdown';
 import { WeatherDropDown } from './wather-dropdown';
+import Image from 'next/image';
+import { uploadImages } from '@/app/action/uploadImages';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const [mood, setMood] = useState<string>('Happy');
   const [phase, setPhase] = useState<string>('Luteal');
   const [category, setCategory] = useState<string>('Other');
   const [weather, setWeather] = useState<string>('Sunny');
+  const [images, setImage] = useState<File[]>([]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -44,8 +48,10 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
       temperature: Number(formData.get('temperature')) || 0,
     };
 
+    console.log(images);
+
     // call the addMeal funnction to add meal to the database
-    errorMessage = await addMeal(data);
+    errorMessage = await addMeal(data, images);
 
     if (errorMessage) {
       console.error('Error adding meal:', errorMessage);
@@ -124,6 +130,37 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid gap-3">
             <Label htmlFor="date">Note</Label>
             <Input id="note" name="note" />
+          </div>
+
+          <div className="grid gap-3">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => {
+                const files = Array.from(e.target.files || []);
+
+                if (files.length > 5) {
+                  alert('You can upload up to 5 images only');
+                  return;
+                }
+
+                setImage(files);
+              }}
+            />
+          </div>
+
+          <div className="grid grid-cols-5 gap-2">
+            {images.map((file, index) => (
+              <Image
+                width={20}
+                height={20}
+                key={index}
+                src={URL.createObjectURL(file)}
+                alt="review"
+                className="h-24 w-24 rounded object-cover"
+              />
+            ))}
           </div>
         </div>
 
