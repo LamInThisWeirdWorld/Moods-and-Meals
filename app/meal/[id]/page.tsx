@@ -11,6 +11,7 @@ import getMealPage from '../../action/getMealPage';
 import DeleteButton from '@/components/deleteButton';
 import { use } from 'react';
 import { format } from 'date-fns';
+import { fetchImage } from '@/app/action/fetchImage';
 
 export default async function mealPage({
   params,
@@ -21,6 +22,7 @@ export default async function mealPage({
 
   const meal = await getMealPage(id);
   const weather = meal.WeatherTemp;
+  const images = await fetchImage(id);
 
   if (!meal) {
     return <div>Meal not found id {id}</div>;
@@ -63,7 +65,12 @@ export default async function mealPage({
           <div className="relative flex items-center justify-center">
             <div className="h-110 w-110 bg-[#F0E7D5]"></div>
             <div className="absolute inset-0 m-auto flex h-105 w-105">
-              <Image src={matcha} alt="pic" fill className="object-cover" />
+              <Image
+                src={images.length > 0 ? images[0].image_url : matcha}
+                alt="pic"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
           <div className="absolute top-100 left-70 flex w-50 items-center justify-center">
