@@ -14,6 +14,7 @@ import right_arrow from '../../../public/fi-sr-angle-right.svg';
 import { use } from 'react';
 import { format } from 'date-fns';
 import { fetchImage } from '@/app/action/fetchImage';
+import ImagesDisplay from '@/components/image-display';
 
 export default async function mealPage({
   params,
@@ -25,6 +26,7 @@ export default async function mealPage({
   const meal = await getMealPage(id);
   const weather = meal.WeatherTemp;
   const images = await fetchImage(id);
+  let display = 0;
 
   if (!meal) {
     return <div>Meal not found id {id}</div>;
@@ -40,11 +42,11 @@ export default async function mealPage({
   });
 
   return (
-    <div className="flex h-full w-full flex-row justify-around bg-[#0E141C] px-25 py-15">
+    <div className="flex h-full w-full flex-row justify-around bg-[#0E141C] px-22 py-15">
       {/* left area */}
       <div className="flex flex-col">
         {/* title */}
-        <div className="flex flex-row items-center gap-5">
+        <div className="ml-5 flex flex-row items-center gap-5">
           {/* star and rating */}
           <div className="relative">
             <Image src={star} alt="star" />
@@ -61,40 +63,8 @@ export default async function mealPage({
           </div>
         </div>
 
-        {/* images of the meal */}
-        <div className="relative mt-5 flex flex-col gap-5">
-          {/* showing image */}
-          <div className="flex flex-row gap-2">
-            <Image src={left_arror} alt="lefr-arrow" />
-            <div className="relative flex items-center justify-center">
-              <div className="h-110 w-110 bg-[#F0E7D5]">
-                <div className="m- absolute inset-0 m-auto flex h-105 w-105">
-                  <Image
-                    src={images.length > 0 ? images[0].image_url : matcha}
-                    alt="pic"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-            <Image src={right_arrow} alt="right-arrow" />
-          </div>
-
-          <div className="absolute top-100 left-70 flex w-50 items-center justify-center">
-            <Image src={price} alt="price" />
-            <span className="font-jersey15 absolute ml-8 text-4xl text-[#F0E7D5]">
-              ${meal.price}
-            </span>
-          </div>
-
-          {/* other images */}
-          <div className="ml-9 flex flex-row gap-4">
-            <div className="h-20 w-20 bg-[#F0E7D5]"></div>
-            <div className="h-20 w-20 bg-[#F0E7D5]"></div>
-            <div className="h-20 w-20 bg-[#F0E7D5]"></div>
-          </div>
-        </div>
+        {/* DISPLAY IMAGES */}
+        <ImagesDisplay images={images} price={meal.price} />
       </div>
 
       {/* right area */}

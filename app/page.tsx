@@ -40,7 +40,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex h-screen w-screen flex-row gap-5 bg-[#0E141C]">
+    <div className="flex min-h-screen w-screen flex-row gap-5 bg-[#0E141C]">
       <div>
         <SidebarProvider>
           {/* <SidebarTrigger /> */}
@@ -49,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* RIGHT-HAND SIDE */}
-      <div className="mx-30 my-10 flex w-full flex-col">
+      <div className="mx-30 my-20 flex w-full flex-col">
         <div className="absolute">
           <p className="font-instrument-sans text-2xl text-white">
             Good morning
