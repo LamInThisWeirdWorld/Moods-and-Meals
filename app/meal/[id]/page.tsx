@@ -15,6 +15,7 @@ import { use } from 'react';
 import { format } from 'date-fns';
 import { fetchImage } from '@/app/action/fetchImage';
 import ImagesDisplay from '@/components/image-display';
+import { DeleteMealPopup } from '@/components/delete-meal-popup';
 
 export default async function mealPage({
   params,
@@ -117,7 +118,10 @@ export default async function mealPage({
         </div>
 
         {/* Delete button */}
-        <DeleteButton mealId={id} />
+        {/* <DeleteButton mealId={id} /> */}
+        <div className="flex flex-row-reverse">
+          <DeleteMealPopup mealId={id} />
+        </div>
       </div>
     </div>
   );
