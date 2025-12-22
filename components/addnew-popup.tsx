@@ -65,7 +65,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
     onSuccess();
   };
   return (
-    <DialogContent>
+    <DialogContent className="max-h-160 overflow-auto rounded-none">
       <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle>Add your meal details</DialogTitle>
@@ -132,22 +132,26 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
             <Input id="note" name="note" />
           </div>
 
-          <div className="grid gap-3">
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
+          <div className="mt-3 grid gap-3">
+            <label className="flex h-8 w-30 cursor-pointer items-center justify-center rounded-lg border-2 border-[#0D273D] text-[15px] font-semibold text-[#0D273D] hover:bg-[#0D273D] hover:text-white">
+              Upload image
+              <input
+                className="hidden"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
 
-                if (files.length > 5) {
-                  alert('You can upload up to 5 images only');
-                  return;
-                }
+                  if (files.length > 5) {
+                    alert('You can upload up to 5 images only');
+                    return;
+                  }
 
-                setImage(files);
-              }}
-            />
+                  setImage(files);
+                }}
+              />
+            </label>
           </div>
 
           <div className="grid grid-cols-5 gap-2">
@@ -164,7 +168,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           </div>
         </div>
 
-        <DialogFooter className="mt-5 gap-5">
+        <DialogFooter className="mt-5 mb-5 gap-5">
           <DialogClose asChild>
             <Button className="bg-transparent text-black hover:bg-transparent hover:text-red-600">
               Cancle
