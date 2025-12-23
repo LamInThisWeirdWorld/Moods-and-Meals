@@ -19,7 +19,7 @@ import { PhaseDropDown } from './phase-dropdown';
 import { CategoryDropDown } from './category-dropdown';
 import { WeatherDropDown } from './wather-dropdown';
 import Image from 'next/image';
-import { ClipLoader } from 'react-spinners';
+import { ClipLoader, DotLoader } from 'react-spinners';
 import { uploadImages } from '@/app/action/uploadImages';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
@@ -30,8 +30,15 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const [images, setImage] = useState<File[]>([]);
   const [onAdding, setOnAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const today = new Date().toISOString().split('T')[0];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
@@ -61,8 +68,13 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
     if (errorMessage) {
       console.error('Error adding meal:', errorMessage);
       setOnAdding(false);
+      setIsLoading(false);
+      setImage([]);
       return;
     } else {
+      setOnAdding(false);
+      setIsLoading(false);
+      setImage([]);
       console.log('Meal added successfully');
     }
     console.log(data);
@@ -130,7 +142,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
           <div className="grid gap-3">
             <Label htmlFor="date">Date</Label>
-            <Input type="date" id="date" name="date" />
+            <Input type="date" id="date" name="date" defaultValue={today} />
           </div>
 
           <div className="grid gap-3">
@@ -175,7 +187,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           </div>
         </div>
 
-        <DialogFooter className="mt-5 mb-5 gap-5">
+        <DialogFooter className="mt-5 mb-5 flex items-center gap-5">
           <DialogClose asChild>
             <Button className="bg-transparent text-black hover:bg-transparent hover:text-red-600">
               Cancle
@@ -187,7 +199,8 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           >
             {onAdding ? 'Adding...' : 'Add Meal'}
           </Button>
-          <ClipLoader loading={isLoading} />
+          {/* <ClipLoader loading={isLoading} /> */}
+          <DotLoader size={30} loading={isLoading} />
         </DialogFooter>
       </form>
     </DialogContent>
