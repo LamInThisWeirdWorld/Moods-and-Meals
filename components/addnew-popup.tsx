@@ -19,6 +19,7 @@ import { PhaseDropDown } from './phase-dropdown';
 import { CategoryDropDown } from './category-dropdown';
 import { WeatherDropDown } from './wather-dropdown';
 import Image from 'next/image';
+import { ClipLoader } from 'react-spinners';
 import { uploadImages } from '@/app/action/uploadImages';
 
 export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
@@ -27,6 +28,8 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
   const [category, setCategory] = useState<string>('Other');
   const [weather, setWeather] = useState<string>('Sunny');
   const [images, setImage] = useState<File[]>([]);
+  const [onAdding, setOnAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,10 +54,13 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
     console.log(images);
 
     // call the addMeal funnction to add meal to the database
+    setOnAdding(true);
+    setIsLoading(true);
     errorMessage = await addMeal(data, images);
 
     if (errorMessage) {
       console.error('Error adding meal:', errorMessage);
+      setOnAdding(false);
       return;
     } else {
       console.log('Meal added successfully');
@@ -133,6 +139,7 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           </div>
 
           <div className="mt-3 grid gap-3">
+            {/* Better UI for upload image  */}
             <label className="flex h-8 w-30 cursor-pointer items-center justify-center rounded-lg border-2 border-[#0D273D] text-[15px] font-semibold text-[#0D273D] hover:bg-[#0D273D] hover:text-white">
               Upload image
               <input
@@ -176,10 +183,11 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
           </DialogClose>
           <Button
             type="submit"
-            className="rounded-[10px] bg-[#0D273D] px-4 py-2 text-white hover:bg-green-700"
+            className={`rounded-[10px] ${onAdding ? 'cursor-not-allowed border-gray-400 text-gray-400 opacity-50' : 'bg-[#0D273D] px-4 py-2 text-white hover:bg-green-700'} `}
           >
-            Add Meal
+            {onAdding ? 'Adding...' : 'Add Meal'}
           </Button>
+          <ClipLoader loading={isLoading} />
         </DialogFooter>
       </form>
     </DialogContent>
