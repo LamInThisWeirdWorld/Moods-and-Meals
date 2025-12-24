@@ -16,12 +16,14 @@ import { fetchMealList } from './action/fetchMealList';
 import { sumSpentMonthly, sumSpentWeekly } from './action/spentCalculation';
 import SwitchMonthWeek from '@/components/switch-month-week';
 import type { ResponseData } from '@/lib/meal';
+import SetBudgetButton from '@/components/setBudgetButton';
 
 export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   // Pass meal data to the table component
   const [meals, setMeals] = useState<ResponseData[]>([]);
   const [isMonthly, setIsMonthly] = useState<boolean>(true);
+  const [budget, setBudget] = useState<number>(0);
 
   // Function to fetch meal data from supabase
   const fetchData = async () => {
@@ -51,12 +53,17 @@ export default function Home() {
       {/* RIGHT-HAND SIDE */}
       <div className="mx-30 my-20 flex w-full flex-col">
         <div className="absolute">
-          <p className="font-instrument-sans text-2xl text-white">
-            Good morning
-          </p>
-          <p className="font-instrument-sans text-4xl font-bold text-white">
-            Lost in the Maze
-          </p>
+          <div className="flex flex-row items-center gap-15">
+            <div>
+              <p className="font-instrument-sans text-2xl text-white">
+                Good morning
+              </p>
+              <p className="font-instrument-sans text-4xl font-bold text-white">
+                Lost in the Maze
+              </p>
+            </div>
+            <SetBudgetButton setBudget={setBudget} />
+          </div>
         </div>
 
         {/* SPENT CARD, WEATHER CARD, CALENDAR */}
@@ -67,6 +74,7 @@ export default function Home() {
               spentMonthly={totalSpentMonthly}
               spentWeekly={totalSpentWeekly}
               isMonth={isMonthly}
+              budget={budget}
             />
           </div>
 

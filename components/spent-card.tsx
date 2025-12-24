@@ -1,17 +1,26 @@
-import React from "react";
-import { Progress } from "@/components/ui/progress";
+import React from 'react';
+import { Progress } from '@/components/ui/progress';
 
 type SpentCardProps = {
   spentMonthly: number;
   spentWeekly: number;
   isMonth: boolean;
+  budget: number;
 };
 
-const SpentCard = ({ spentMonthly, spentWeekly, isMonth }: SpentCardProps) => {
-  const period = isMonth ? "month" : "week";
+const SpentCard = ({
+  spentMonthly,
+  spentWeekly,
+  isMonth,
+  budget,
+}: SpentCardProps) => {
+  const period = isMonth ? 'month' : 'week';
   const spent = isMonth ? spentMonthly : spentWeekly;
   return (
     <div className="flex h-40 w-100 flex-col justify-center rounded-2xl bg-[#A6BED1]">
+      <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
+        Budget: {budget}
+      </div>
       <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
         Spent this {period}
       </div>
