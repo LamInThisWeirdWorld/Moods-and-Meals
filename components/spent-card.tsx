@@ -6,6 +6,7 @@ type SpentCardProps = {
   spentWeekly: number;
   isMonth: boolean;
   budget: number;
+  progress: number;
 };
 
 const SpentCard = ({
@@ -13,17 +14,22 @@ const SpentCard = ({
   spentWeekly,
   isMonth,
   budget,
+  progress,
 }: SpentCardProps) => {
   const period = isMonth ? 'month' : 'week';
   const spent = isMonth ? spentMonthly : spentWeekly;
   return (
     <div className="flex h-40 w-100 flex-col justify-center rounded-2xl bg-[#A6BED1]">
-      <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
-        Budget: {budget}
+      <div className="flex flex-row items-center justify-between">
+        <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
+          Spent this {period}
+        </div>
+
+        <div className="font-instrument-sans mr-4 text-[15px] font-semibold text-[#0D273D]">
+          Budget: ${budget}
+        </div>
       </div>
-      <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
-        Spent this {period}
-      </div>
+
       <div className="font-jersey15 mt-0 ml-5 pt-0 text-5xl tracking-wide text-[#0D273D]">
         ${spent.toFixed(2)}
       </div>
@@ -31,7 +37,7 @@ const SpentCard = ({
       <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
         <span className="font-bold">$300</span> left in your budget
       </div>
-      <Progress className="mt-3 ml-5 w-90" value={46} />
+      <Progress className="mt-3 ml-5 w-90" value={progress} />
     </div>
   );
 };

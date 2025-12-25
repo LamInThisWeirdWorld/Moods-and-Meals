@@ -13,7 +13,11 @@ import React, { useState, useEffect, use } from 'react';
 import { supabase } from './database-client';
 import AddNewButton from '@/components/addnew-button';
 import { fetchMealList } from './action/fetchMealList';
-import { sumSpentMonthly, sumSpentWeekly } from './action/spentCalculation';
+import {
+  spentPercentage,
+  sumSpentMonthly,
+  sumSpentWeekly,
+} from './action/spentCalculation';
 import SwitchMonthWeek from '@/components/switch-month-week';
 import type { ResponseData } from '@/lib/meal';
 import SetBudgetButton from '@/components/setBudgetButton';
@@ -24,6 +28,7 @@ export default function Home() {
   const [meals, setMeals] = useState<ResponseData[]>([]);
   const [isMonthly, setIsMonthly] = useState<boolean>(true);
   const [budget, setBudget] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   // Function to fetch meal data from supabase
   const fetchData = async () => {
@@ -36,6 +41,9 @@ export default function Home() {
 
   const totalSpentWeekly = sumSpentWeekly(meals);
   console.log('Total Spent This Week: ', totalSpentWeekly);
+
+  const percentage = spentPercentage(totalSpentMonthly, budget);
+  console.log('spent: ' + totalSpentMonthly + ', budget: ' + budget);
 
   useEffect(() => {
     fetchData();
@@ -75,6 +83,7 @@ export default function Home() {
               spentWeekly={totalSpentWeekly}
               isMonth={isMonthly}
               budget={budget}
+              progress={percentage}
             />
           </div>
 

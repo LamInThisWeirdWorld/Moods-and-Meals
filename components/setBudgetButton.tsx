@@ -24,16 +24,17 @@ const SetBudgetButton = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [onAdding, setOnAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState<number>(0);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    // if (isSubmitting) return;
+    // setIsSubmitting(true);
 
-    const monthlyBudget = Number(formData.get('monthlyBudget'));
-    setBudget(monthlyBudget);
+    // const formData = new FormData(e.currentTarget);
+
+    // const monthlyBudget = Number(formData.get('monthlyBudget'));
+    setBudget(input);
     setOpen(false);
   };
 
@@ -58,7 +59,12 @@ const SetBudgetButton = ({
 
           <div className="grid gap-3">
             {/* <Label htmlFor="monthlyBudget">Monthly Budget</Label> */}
-            <Input id="" name="monthlyBudget" />
+            <Input
+              name="monthlyBudget"
+              type="number"
+              value={input ?? 0}
+              onChange={(e) => setInput(Number(e.target.value))}
+            />
           </div>
 
           <DialogFooter className="mt-5 mb-5 flex items-center gap-5">
