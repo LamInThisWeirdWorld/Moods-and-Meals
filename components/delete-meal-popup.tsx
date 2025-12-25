@@ -14,6 +14,7 @@ import {
 import DeleteButton from './deleteButton';
 import deleteMeal from '@/app/action/deleteMeal';
 import { useState } from 'react';
+import { Button } from './ui/button';
 
 export function DeleteMealPopup({ mealId }: { mealId: string }) {
   const router = useRouter();
@@ -34,7 +35,7 @@ export function DeleteMealPopup({ mealId }: { mealId: string }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <button
+        <Button
           //   onClick={handleDelete}
           className={`right-180 flex h-10 w-30 items-center justify-center self-end rounded-2xl border-2 transition ${
             onDeleting
@@ -43,7 +44,7 @@ export function DeleteMealPopup({ mealId }: { mealId: string }) {
           } `}
         >
           {onDeleting ? 'Deleting...' : 'Delete'}
-        </button>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

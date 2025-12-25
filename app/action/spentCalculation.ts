@@ -55,5 +55,8 @@ export function sumSpentWeekly(meals: ResponseData[]): number {
 
 export function spentPercentage(spent: number, budget: number): number {
     return (spent/budget*100);
-    
+}
+
+export function spentLeft(spent: number, budget: number): number {
+    return budget - spent;
 }

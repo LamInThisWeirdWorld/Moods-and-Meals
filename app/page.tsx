@@ -14,6 +14,7 @@ import { supabase } from './database-client';
 import AddNewButton from '@/components/addnew-button';
 import { fetchMealList } from './action/fetchMealList';
 import {
+  spentLeft,
   spentPercentage,
   sumSpentMonthly,
   sumSpentWeekly,
@@ -43,7 +44,7 @@ export default function Home() {
   console.log('Total Spent This Week: ', totalSpentWeekly);
 
   const percentage = spentPercentage(totalSpentMonthly, budget);
-  console.log('spent: ' + totalSpentMonthly + ', budget: ' + budget);
+  const moneyLeft = spentLeft(totalSpentMonthly, budget);
 
   useEffect(() => {
     fetchData();
@@ -84,6 +85,7 @@ export default function Home() {
               isMonth={isMonthly}
               budget={budget}
               progress={percentage}
+              moneyLeft={moneyLeft}
             />
           </div>
 
