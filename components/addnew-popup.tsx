@@ -19,6 +19,7 @@ import { PhaseDropDown } from './phase-dropdown';
 import { CategoryDropDown } from './category-dropdown';
 import { WeatherDropDown } from './wather-dropdown';
 import Image from 'next/image';
+import { Textarea } from '@/components/ui/textarea';
 import { ClipLoader, DotLoader } from 'react-spinners';
 import { uploadImages } from '@/app/action/uploadImages';
 
@@ -147,7 +148,11 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
           <div className="grid gap-3">
             <Label htmlFor="date">Note</Label>
-            <Input id="note" name="note" />
+            <Textarea
+              placeholder="Type your note here..."
+              id="note"
+              name="note"
+            />
           </div>
 
           <div className="mt-3 grid gap-3">
