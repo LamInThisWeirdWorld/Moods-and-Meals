@@ -35,6 +35,10 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
 
   const today = new Date().toISOString().split('T')[0];
 
+  const removeImage = (removedIndex: number) => {
+    setImage((prev) => prev.filter((_, index) => index !== removedIndex));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (isSubmitting) return;
 
@@ -178,16 +182,26 @@ export default function AddNewPopup({ onSuccess }: { onSuccess: () => void }) {
             </label>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-5 gap-5">
             {images.map((file, index) => (
-              <Image
-                width={20}
-                height={20}
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt="review"
-                className="h-24 w-24 rounded object-cover"
-              />
+              <div className="relative flex h-20 w-20 flex-row-reverse">
+                <Image
+                  width={20}
+                  height={20}
+                  key={index}
+                  src={URL.createObjectURL(file)}
+                  alt="review"
+                  className="h-24 w-24 rounded object-cover"
+                />
+
+                <Button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute flex h-8 w-8 items-center justify-center rounded-full bg-transparent font-black hover:bg-transparent hover:text-2xl"
+                >
+                  ✕
+                </Button>
+              </div>
             ))}
           </div>
         </div>
