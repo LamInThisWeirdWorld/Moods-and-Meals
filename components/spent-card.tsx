@@ -37,7 +37,8 @@ const SpentCard = ({
       </div>
 
       <div className="font-instrument-sans ml-5 text-2xl text-[#0D273D]">
-        <span className="font-bold">${moneyLeft}</span> left in your budget
+        <span className="font-bold">${moneyLeft.toFixed(2)}</span> left in your
+        budget
       </div>
       <Progress className="mt-3 ml-5 w-90" value={progress} />
     </div>
