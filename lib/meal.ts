@@ -18,4 +18,14 @@ export type InputData = {
     mood: string;
     note: string;
     place: string;
+    weather: string;
+    temperature: number;
 };
+
+export type DisplayData = {
+    phase: string;
+    mood: string;
+    price: number;
+    category: string;
+    date: string;
+}

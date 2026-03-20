@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Calendar,
@@ -7,7 +7,7 @@ import {
   Settings,
   ChartNoAxesColumn,
   User,
-} from "lucide-react";
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -21,17 +21,17 @@ import {
   SidebarMenuItem,
   SidebarMenuSubItem,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import React from "react";
+} from '@/components/ui/sidebar';
+import React from 'react';
 
-import User_icon from "../public/User.svg";
-import Link from "next/link";
-import Image from "next/image";
+import User_icon from '../public/User.svg';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const items = [
-  { title: "Home", url: "./", icon: Home },
-  { title: "Data", url: "./", icon: ChartNoAxesColumn },
-  { title: "Setting", url: "./", icon: Settings },
+  { title: 'Home', url: './', icon: Home },
+  { title: 'Data', url: '/dataDisplay', icon: ChartNoAxesColumn },
+  { title: 'Setting', url: './', icon: Settings },
 ];
 
 export function AppSidebar() {

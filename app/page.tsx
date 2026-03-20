@@ -51,7 +51,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex min-h-screen w-screen flex-row gap-5 bg-[#0E141C]">
+    <div className="flex min-h-screen w-full flex-row gap-5 bg-[#0E141C]">
       <div>
         <SidebarProvider>
           {/* <SidebarTrigger /> */}
