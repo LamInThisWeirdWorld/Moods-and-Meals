@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useState } from 'react';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -15,17 +15,25 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-type ChartData = {
+type PhaseToMoodData = {
   phase: string;
   happy: number;
   neutral: number;
   uncomfortable: number;
 };
 
+type MoodToCategoryData = {
+  mood: string;
+  categoryCounts: Record<string, number>;
+};
+
 export default function dataDisplay() {
   const [mealData, setMealData] = useState<DisplayData[]>([]);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [phaseToMoodchartData, setPhaseToMoodChartData] = useState<
+    PhaseToMoodData[]
+  >([]);
 
+  // Fetch meal data
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchDisplayData();
@@ -44,15 +52,16 @@ export default function dataDisplay() {
     fetchData();
   }, []);
 
+  // Process data for PhaseToMood chart
   useEffect(() => {
-    const result: Record<string, ChartData> = {};
+    const phaseToMoodresult: Record<string, PhaseToMoodData> = {};
 
     mealData.forEach((item) => {
       const phase = item.phase;
       const mood = item.mood;
 
-      if (!result[phase]) {
-        result[phase] = {
+      if (!phaseToMoodresult[phase]) {
+        phaseToMoodresult[phase] = {
           phase,
           happy: 0,
           neutral: 0,
@@ -60,12 +69,39 @@ export default function dataDisplay() {
         };
       }
 
-      if (mood === 'Happy') result[phase].happy++;
-      else if (mood === 'Neutral') result[phase].neutral++;
-      else if (mood === 'Uncomfortable') result[phase].uncomfortable++;
+      if (mood === 'Happy') phaseToMoodresult[phase].happy++;
+      else if (mood === 'Neutral') phaseToMoodresult[phase].neutral++;
+      else if (mood === 'Uncomfortable')
+        phaseToMoodresult[phase].uncomfortable++;
     });
 
-    setChartData(Object.values(result));
+    setPhaseToMoodChartData(Object.values(phaseToMoodresult));
+  }, [mealData]);
+
+  const stackedData = useMemo(() => {
+    const result: Record<string, any> = {};
+    const categories = new Set<string>();
+
+    mealData.forEach((item) => {
+      const { mood, category } = item;
+
+      categories.add(category);
+
+      if (!result[mood]) {
+        result[mood] = { mood };
+      }
+
+      if (!result[mood][category]) {
+        result[mood][category] = 0;
+      }
+
+      result[mood][category]++;
+    });
+
+    return {
+      data: Object.values(result),
+      categories: Array.from(categories),
+    };
   }, [mealData]);
 
   return (
@@ -95,7 +131,7 @@ export default function dataDisplay() {
             </div>
             <ResponsiveContainer>
               <BarChart
-                data={chartData}
+                data={phaseToMoodchartData}
                 margin={{ top: 15, right: 20, left: -20, bottom: 10 }}
               >
                 <XAxis dataKey="phase" />
@@ -110,10 +146,30 @@ export default function dataDisplay() {
             </ResponsiveContainer>
           </div>
 
-          <div className="flex h-80 w-150 flex-col rounded-2xl bg-[#3E6985] font-bold">
+          <div className="flex h-90 w-160 flex-col rounded-2xl bg-[#F5F0E9] font-bold">
             <div className="font-instrument-sans mt-2 ml-3 text-xl text-[#0D273D]">
               Meal Category Distribution by Moods
             </div>
+            <ResponsiveContainer>
+              <BarChart
+                data={stackedData.data}
+                margin={{ top: 15, right: 20, left: -20, bottom: 10 }}
+              >
+                <XAxis dataKey="mood" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+
+                {stackedData.categories.map((cat, index) => (
+                  <Bar
+                    key={cat}
+                    dataKey={cat}
+                    stackId="a"
+                    fill={`hsl(${200 + index * 20}, 45%,65%)`} // auto colors
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
