@@ -104,8 +104,61 @@ export default function dataDisplay() {
     };
   }, [mealData]);
 
+  type HeatmapCell = {
+    key: string; // "phase-mood"
+    [category: string]: number | string;
+  };
+
+  const heatmapData = useMemo(() => {
+    const result: Record<string, HeatmapCell> = {};
+    const categories = new Set<string>();
+
+    mealData.forEach((item) => {
+      const combo = `${item.phase} • ${item.mood}`;
+      const category = item.category;
+
+      categories.add(category);
+
+      if (!result[combo]) {
+        result[combo] = { key: combo };
+      }
+
+      if (!result[combo][category]) {
+        result[combo][category] = 0;
+      }
+
+      (result[combo][category] as number)++;
+    });
+
+    return {
+      data: Object.values(result),
+      categories: Array.from(categories),
+    };
+  }, [mealData]);
+
+  const getHeatColor = (value: number, max: number) => {
+    if (max === 0) return 'hsl(234, 20%, 90%)'; // empty = very light
+
+    const intensity = value / max;
+
+    return `hsl(234, 35%, ${85 - intensity * 50}%)`;
+  };
+
+  const maxValue = useMemo(() => {
+    let max = 0;
+
+    heatmapData.data.forEach((row) => {
+      heatmapData.categories.forEach((cat) => {
+        const val = (row[cat] as number) || 0;
+        if (val > max) max = val;
+      });
+    });
+
+    return max;
+  }, [heatmapData]);
+
   return (
-    <div className="flex min-h-screen w-full flex-row gap-5 bg-[#0E141C]">
+    <div className="mb-25 flex h-full w-full flex-row gap-5 bg-[#0E141C]">
       <div>
         <SidebarProvider>
           {/* <SidebarTrigger /> */}
@@ -113,7 +166,8 @@ export default function dataDisplay() {
         </SidebarProvider>
       </div>
 
-      <div className="mx-30 my-20 flex w-full flex-col gap-15">
+      <div className="mx-30 flex w-full flex-col gap-15">
+        // Title and description
         <div className="flex flex-col gap-2">
           <p className="font-instrument-sans text-4xl font-bold text-white">
             Insights Dashboard
@@ -123,10 +177,10 @@ export default function dataDisplay() {
             and meaningful insights.
           </p>
         </div>
-
         <div className="flex flex-row gap-20">
-          <div className="flex h-90 w-160 flex-col rounded-2xl bg-[#A6BED1] font-bold">
-            <div className="font-instrument-sans mt-2 ml-3 text-xl text-[#0D273D]">
+          {/* Bar chart for phase to mood distribution */}
+          <div className="flex h-90 w-160 flex-col items-center justify-center rounded-2xl bg-[#A6BED1] font-bold">
+            <div className="font-instrument-sans mt-2 text-xl text-[#0D273D]">
               Mood Distribution by Cycle Phase
             </div>
             <ResponsiveContainer>
@@ -145,9 +199,9 @@ export default function dataDisplay() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          <div className="flex h-90 w-160 flex-col rounded-2xl bg-[#F5F0E9] font-bold">
-            <div className="font-instrument-sans mt-2 ml-3 text-xl text-[#0D273D]">
+          {/* Stacked bar chart for meal category distribution by mood */}
+          <div className="flex h-90 w-160 flex-col items-center justify-center rounded-2xl bg-[#F5F0E9] font-bold">
+            <div className="font-instrument-sans mt-2 text-xl text-[#0D273D]">
               Meal Category Distribution by Moods
             </div>
             <ResponsiveContainer>
@@ -165,11 +219,53 @@ export default function dataDisplay() {
                     key={cat}
                     dataKey={cat}
                     stackId="a"
-                    fill={`hsl(${200 + index * 20}, 45%,65%)`} // auto colors
+                    fill={`hsl(${200 + index * 20}, 45%,65%)`}
                   />
                 ))}
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="h-full max-h-fit w-full max-w-fit overflow-x-auto overflow-y-auto rounded-2xl bg-[#F5F0E9] font-bold">
+          <div className="overflow-x-auto">
+            <table className="m-5">
+              <thead>
+                <tr>
+                  <th className="p-2"></th>
+                  {heatmapData.categories.map((cat) => (
+                    <th key={cat} className="pb-2 text-sm">
+                      {cat}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody>
+                {heatmapData.data.map((row) => (
+                  <tr key={row.key}>
+                    {/* Y-axis label */}
+                    <td className="pr-2 font-semibold">{row.key}</td>
+
+                    {/* Heat cells */}
+                    {heatmapData.categories.map((cat) => {
+                      const value = (row[cat] as number) || 0;
+
+                      return (
+                        <td
+                          key={cat}
+                          className="h-12 w-12 text-center text-xs font-medium"
+                          style={{
+                            backgroundColor: getHeatColor(value, maxValue),
+                          }}
+                        >
+                          {value}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
