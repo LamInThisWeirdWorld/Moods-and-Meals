@@ -31,7 +31,7 @@ import Image from 'next/image';
 const items = [
   { title: 'Home', url: './', icon: Home },
   { title: 'Data', url: '/dataDisplay', icon: ChartNoAxesColumn },
-  { title: 'Setting', url: './', icon: Settings },
+  // { title: 'Setting', url: './', icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -46,7 +46,7 @@ export function AppSidebar() {
       <SidebarContent className="flex items-center justify-center bg-[#f5f0e9]">
         <SidebarGroup className="flex p-2">
           <SidebarGroupContent className="flex items-center justify-center">
-            <SidebarMenu className="gap-10">
+            <SidebarMenu className="mt-[-50px] flex flex-col gap-15">
               {items.map((item) => {
                 const Icon = item.icon;
                 return (

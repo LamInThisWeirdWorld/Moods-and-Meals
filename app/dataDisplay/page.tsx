@@ -13,6 +13,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LineChart,
+  CartesianGrid,
+  Line,
 } from 'recharts';
 
 type PhaseToMoodData = {
@@ -22,10 +25,10 @@ type PhaseToMoodData = {
   uncomfortable: number;
 };
 
-type MoodToCategoryData = {
-  mood: string;
-  categoryCounts: Record<string, number>;
-};
+// type MoodToCategoryData = {
+//   mood: string;
+//   categoryCounts: Record<string, number>;
+// };
 
 export default function dataDisplay() {
   const [mealData, setMealData] = useState<DisplayData[]>([]);
@@ -157,6 +160,75 @@ export default function dataDisplay() {
     return max;
   }, [heatmapData]);
 
+  // Only display data of the current month
+  // Might be changed later to allow users to select different time ranges
+  const getCurrentMonthData = (data: any[]) => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return data.filter((item) => {
+      const d = new Date(item.date);
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+  };
+
+  const groupByDate = (data: any[]) => {
+    const map = new Map();
+
+    data.forEach((item) => {
+      const date = item.date;
+
+      if (!map.has(date)) {
+        map.set(date, 0);
+      }
+
+      map.set(date, map.get(date) + item.price);
+    });
+
+    return Array.from(map.entries()).map(([date, total]) => ({
+      date,
+      total,
+    }));
+  };
+
+  const getAllDatesInMonth = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+
+    const dates = [];
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month, i);
+      dates.push(date.toLocaleDateString('en-CA'));
+    }
+
+    return dates;
+  };
+
+  const fillMissingDates = (groupedData: any[]) => {
+    const allDates = getAllDatesInMonth();
+
+    const map = new Map(groupedData.map((item) => [item.date, item.total]));
+
+    return allDates.map((date) => ({
+      date,
+      total: map.get(date) || 0,
+    }));
+  };
+
+  const lineData = useMemo(() => {
+    const filtered = getCurrentMonthData(mealData);
+    const grouped = groupByDate(filtered);
+    const filled = fillMissingDates(grouped);
+
+    return filled.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+  }, [mealData]);
+
   return (
     <div className="mb-25 flex h-full w-full flex-row gap-5 bg-[#0E141C]">
       <div>
@@ -177,16 +249,16 @@ export default function dataDisplay() {
             and meaningful insights.
           </p>
         </div>
-        <div className="flex flex-row gap-20">
+        <div className="mb-5 flex flex-row gap-20">
           {/* Bar chart for phase to mood distribution */}
-          <div className="flex h-90 w-160 flex-col items-center justify-center rounded-2xl bg-[#A6BED1] font-bold">
+          <div className="flex h-100 min-h-fit w-full max-w-160 min-w-fit flex-col items-center justify-center rounded-2xl bg-[#A6BED1] font-bold">
             <div className="font-instrument-sans mt-2 text-xl text-[#0D273D]">
               Mood Distribution by Cycle Phase
             </div>
             <ResponsiveContainer>
               <BarChart
                 data={phaseToMoodchartData}
-                margin={{ top: 15, right: 20, left: -20, bottom: 10 }}
+                margin={{ top: 15, right: 20, left: -10, bottom: 10 }}
               >
                 <XAxis dataKey="phase" />
                 <YAxis />
@@ -200,14 +272,14 @@ export default function dataDisplay() {
             </ResponsiveContainer>
           </div>
           {/* Stacked bar chart for meal category distribution by mood */}
-          <div className="flex h-90 w-160 flex-col items-center justify-center rounded-2xl bg-[#F5F0E9] font-bold">
+          <div className="flex h-100 max-h-full min-h-fit w-160 max-w-full min-w-fit flex-col items-center justify-center rounded-2xl bg-[#F5F0E9] font-bold">
             <div className="font-instrument-sans mt-2 text-xl text-[#0D273D]">
               Meal Category Distribution by Moods
             </div>
             <ResponsiveContainer>
               <BarChart
                 data={stackedData.data}
-                margin={{ top: 15, right: 20, left: -20, bottom: 10 }}
+                margin={{ top: 15, right: 20, left: -10, bottom: 10 }}
               >
                 <XAxis dataKey="mood" />
                 <YAxis />
@@ -226,46 +298,85 @@ export default function dataDisplay() {
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="h-full max-h-fit w-full max-w-fit overflow-x-auto overflow-y-auto rounded-2xl bg-[#F5F0E9] font-bold">
-          <div className="overflow-x-auto">
-            <table className="m-5">
-              <thead>
-                <tr>
-                  <th className="p-2"></th>
-                  {heatmapData.categories.map((cat) => (
-                    <th key={cat} className="pb-2 text-sm">
-                      {cat}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {heatmapData.data.map((row) => (
-                  <tr key={row.key}>
-                    {/* Y-axis label */}
-                    <td className="pr-2 font-semibold">{row.key}</td>
-
-                    {/* Heat cells */}
-                    {heatmapData.categories.map((cat) => {
-                      const value = (row[cat] as number) || 0;
-
-                      return (
-                        <td
-                          key={cat}
-                          className="h-12 w-12 text-center text-xs font-medium"
-                          style={{
-                            backgroundColor: getHeatColor(value, maxValue),
-                          }}
-                        >
-                          {value}
-                        </td>
-                      );
-                    })}
+        {/* Heatmap */}
+        <div className="flex flex-row gap-20">
+          <div className="flex h-full max-h-fit w-full max-w-fit flex-col items-center justify-center overflow-x-auto overflow-y-auto rounded-2xl bg-[#F5F0E9] font-bold">
+            <div className="font-instrument-sans mt-2 text-xl text-[#0D273D]">
+              Heatmap
+            </div>
+            <div className="overflow-x-auto">
+              <table className="m-5 mt-0">
+                <thead>
+                  <tr>
+                    <th className="p-2"></th>
+                    {heatmapData.categories.map((cat) => (
+                      <th key={cat} className="pb-2 text-sm">
+                        {cat}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {heatmapData.data.map((row) => (
+                    <tr key={row.key}>
+                      {/* Y-axis label */}
+                      <td className="pr-2 font-semibold">{row.key}</td>
+
+                      {/* Heat cells */}
+                      {heatmapData.categories.map((cat) => {
+                        const value = (row[cat] as number) || 0;
+
+                        return (
+                          <td
+                            key={cat}
+                            className="h-12 w-12 text-center text-xs font-medium"
+                            style={{
+                              backgroundColor: getHeatColor(value, maxValue),
+                            }}
+                          >
+                            {value}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="flex h-full min-h-fit w-full min-w-fit flex-col items-center justify-center rounded-2xl bg-[#A6BED1] font-bold">
+            <div className="font-instrument-sans text-xl text-[#0D273D]">
+              Line chart for daily spending
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={lineData}
+                margin={{ top: 25, right: 30, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={
+                    (date) => new Date(date).getDate().toString() // show only day (1–31)
+                  }
+                />
+
+                <YAxis />
+
+                <Tooltip
+                  labelFormatter={(date) => new Date(date).toLocaleDateString()}
+                />
+
+                <Line
+                  type="monotone"
+                  dataKey="total"
+                  stroke="#3A3e6c"
+                  strokeWidth={2.5}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
